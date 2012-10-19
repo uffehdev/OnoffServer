@@ -86,32 +86,25 @@ namespace OnoffServer
                             if (to == serverName)
                             {   //pc ska bytas mot datorns namn
                                 //Gör den action som begärds
-                                rdyToRecieve = false;
                                 time = mins * 60;
 
                                 if (masg == "turnoff")
                                 {
                                     //Stäng av datorn
                                     writer('l', "Turning off the computer");
-                                    writer('a', "Turn off");
-                                    //callOn = shutDown;
-                                    //tmr.Enabled = true;
+                                    writer('a', "Turn off|" + minsStr);
                                 }
                                 else if (masg == "restart")
                                 {
                                     //Starta om datorn
                                     writer('l', "Restarting the computer");
-                                    writer('a', "Restart");
-                                    //callOn = restart;
-                                    //tmr.Enabled = true;
+                                    writer('a', "Restart|" + minsStr);
                                 }
                                 else if (masg == "sleep")
                                 {
                                     //Sleepa datorn
                                     writer('l', "Sleeping the computer");
-                                    writer('a', "Sleep");
-                                    //callOn = sleep;
-                                    //tmr.Enabled = true;
+                                    writer('a', "Sleep|" + minsStr);
                                 }
                             }
                         }
@@ -120,11 +113,8 @@ namespace OnoffServer
                             if (to == serverName && masg == "abort")
                             {
                                 //Sleepa datorn
-                                Console.WriteLine("Aborting call the computer");
-                                writer('a', "None");
-                                //callOn = abort;
-                                //canRecive = true;
-                                //tmr.Enabled = false;
+                                writer('l', "Aborting call the computer");
+                                writer('a', "None|0");
                             }
                         }
                     }

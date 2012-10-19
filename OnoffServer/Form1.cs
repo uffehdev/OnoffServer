@@ -20,6 +20,9 @@ namespace OnoffServer
         Server srv;
         bool srvOnline, nameSet;
         string srvName;
+        Timer tmrToAction;
+        int minsAction, minsToAction;
+        string Action;
 
         public Form1()
         {
@@ -31,6 +34,7 @@ namespace OnoffServer
             srv = new Server();
             srvName = "";
             nameSet = false;
+            tmrToAction = new Timer();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -83,7 +87,45 @@ namespace OnoffServer
 
         void changeActionTxt(string txt)
         {
-            lblAction.Text = txt;
+            string[] strA = txt.Split('|');
+
+            Action = strA[0];
+            string mins = strA[1];
+            int minsAction = int.Parse(mins);
+            minsToAction = minsAction;
+            if (tmrToAction != null)
+                tmrToAction.Dispose();
+
+            if (minsAction == 0)
+            {
+                preformAction();
+            }
+            else
+            {
+                tmrToAction = new Timer();
+                tmrToAction.Interval = 60000;
+                tmrToAction.Tick += tmrToAction_Tick;
+            }
+
+            lblAction.Text = Action + " - " + minsToAction + "/" + minsAction + " min";
+        }
+
+        private void tmrToAction_Tick(object sender, EventArgs e)
+        {
+            minsToAction--;
+            lblAction.Text = Action + " - " + minsToAction + "/" + minsAction + " min";
+            if (minsToAction == 0)
+            {
+                preformAction();
+            }
+        }
+
+        void preformAction()
+        {
+            if (Action == "Turn off")
+            {
+                shutDown();
+            }
         }
 
         private void shutDown()
