@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace OnoffServer
 {
@@ -34,6 +36,7 @@ namespace OnoffServer
         private void Form1_Load(object sender, EventArgs e)
         {
             srv.writer += handleMsg;
+            lblIp.Text = GetLocalIPAddress();
         }
 
         private void btnPutOnline_Click(object sender, EventArgs e)
@@ -124,5 +127,28 @@ namespace OnoffServer
             nameSet = !nameSet;
         }
 
+
+        public string GetLocalIPAddress()
+        {
+            string localIP;
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                IPHostEntry host;
+                localIP = "";
+                host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (IPAddress ip in host.AddressList)
+                {
+                    if (ip.AddressFamily.ToString() == "InterNetwork")
+                    {
+                        localIP = ip.ToString();
+                    }
+                }
+            }
+            else
+            {
+                localIP = "Not local network";
+            }
+            return localIP;
+        }
     }
 }
